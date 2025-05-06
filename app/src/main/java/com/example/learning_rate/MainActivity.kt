@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,9 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
 import com.example.learning_rate.ui.theme.Learning_rateTheme
 import java.nio.file.WatchEvent
 import kotlin.contracts.contract
@@ -62,6 +66,13 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     var msg by remember { mutableStateOf("enter") }
     var context = LocalActivity.current
+    var context2 = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        if (!Python.isStarted()) {
+            Python.start(AndroidPlatform(context2))
+        }
+    }
 
     Box(
 
@@ -80,7 +91,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 .width(100.dp).offset(x = 50.dp, y = 30.dp)
                 .background( brush = Brush.linearGradient(colors = listOf(Color.Red,Color.Blue))
                 )
-                .clickable{msg = printable()}
+                .clickable{
+                        val python  = Python.getInstance()
+                        val result = python.getModule("unit").callAttr("say_hello")
+                        msg = result.toString()
+                }
             ,
             contentAlignment = Alignment.Center
 

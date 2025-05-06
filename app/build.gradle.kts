@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.chaquo.python") // Chaquopy plugin
 }
 
 android {
@@ -16,6 +17,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64") // ✅ This is correct syntax in Kotlin DSL
+        }
+
     }
 
     buildTypes {
@@ -38,7 +44,9 @@ android {
         compose = true
         viewBinding = true
     }
-}
+
+    }
+
 
 dependencies {
 
@@ -56,7 +64,7 @@ dependencies {
     implementation("androidx.camera:camera-extensions:${camerax_version}")
 
     //implementation("com.google.mlkit:face-detection:16.1.5")
-
+    //implementation("com.chaquo.python:chaquopy:12.0.0")
         implementation("com.google.mediapipe:tasks-vision:0.10.7")  // or latest
 
 
