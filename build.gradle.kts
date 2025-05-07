@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
+    id("com.chaquo.python") version "16.0.0" apply false
 }
 
 buildscript {
@@ -13,6 +14,6 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:8.0.0")  // Your Android Gradle plugin version
-        classpath("com.chaquo.python:gradle:12.0.0")  // Chaquopy plugin version
+        classpath("com.chaquo.python:gradle:16.0.0")  // Chaquopy plugin version
     }
 }

@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.org.apache.ivy.util.url.IvyAuthenticator.install
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,10 +8,18 @@ plugins {
 }
 
 android {
+    flavorDimensions += "pyVersion"
+    productFlavors {
+        create("py310") { dimension = "pyVersion" }
+
+    }
     namespace = "com.example.learning_rate"
     compileSdk = 35
 
     defaultConfig {
+
+
+
         applicationId = "com.example.learning_rate"
         minSdk = 24
         targetSdk = 35
@@ -22,6 +32,16 @@ android {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64") // ✅ This is correct syntax in Kotlin DSL
         }
 
+
+
+//        python {
+//            // Optional: specify the path to your Python interpreter (only if not auto-detected)
+//            //buildPython = "C:\\Users\\YourUsername\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
+//
+//            pip {
+//                install("numpy") // Install numpy and any other libraries you need
+//            }
+//        }
     }
 
     buildTypes {
@@ -33,23 +53,42 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
         viewBinding = true
     }
+}
+chaquopy {
+    productFlavors {
+        getByName("py310") { version = "3.10" }
 
     }
-
+    defaultConfig {
+        version = "3.10"
+        pip {
+            install("numpy")
+            //install("opencv-python") this damn thing works on c++ dependencies and the gradle
+            //cry everytime i sync
+        }
+    }
+    sourceSets {
+        getByName("main") {
+            srcDir("src/main/python")
+        }
+    }
+}
 
 dependencies {
-
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
@@ -59,16 +98,13 @@ dependencies {
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-video:${camerax_version}")
-
     implementation("androidx.camera:camera-view:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
 
     //implementation("com.google.mlkit:face-detection:16.1.5")
     //implementation("com.chaquo.python:chaquopy:12.0.0")
-        implementation("com.google.mediapipe:tasks-vision:0.10.7")  // or latest
 
-
-
+    implementation("com.google.mediapipe:tasks-vision:0.10.7")  // or latest
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
